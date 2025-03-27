@@ -3,6 +3,23 @@ const {userAuth, adminAuth} = require("./middlewares/auth")
 
 const app = express();
 
+
+app.get("/getUserData", (err, req, res, next) => {
+    try {
+        throw new Error ("dbxyzuvhijk")
+        res.send("User data sent.")
+    } catch (err) {
+        // res.status(500).send(err)
+        res.status(500).send("Something went wrong.")
+    }
+})
+
+app.use("/", (err,req,res,next) => {
+    if(err)
+        res.status(500).send("unknown error.")
+})
+
+
 // app.use("/user", userAuth)
 
 // app.use("/user", (req,res,next)=>{
@@ -23,59 +40,59 @@ const app = express();
 //         next()
 // })
 
-app.post("/user/login", 
-    // (req,res,next)=>{
-    //     const token = "xyz"
-    //     const isUserAuthorized = token === 'xyz'
-    //     if (!isUserAuthorized)
-    //         res.status(401).send("Unauthorized request.");
-    //     else
-    //         next();
-    // },
-    (req,res) => {
-    res.send("User log-in successful.")
-})
+// app.post("/user/login", 
+//     // (req,res,next)=>{
+//     //     const token = "xyz"
+//     //     const isUserAuthorized = token === 'xyz'
+//     //     if (!isUserAuthorized)
+//     //         res.status(401).send("Unauthorized request.");
+//     //     else
+//     //         next();
+//     // },
+//     (req,res) => {
+//     res.send("User log-in successful.")
+// })
 
-app.get("/user/getData", userAuth,
-    // (req,res,next)=>{
-    //     const token = "xyz"
-    //     const isUserAuthorized = token === 'xyz'
-    //     if (!isUserAuthorized)
-    //         res.status(401).send("Unauthorized request.");
-    //     else
-    //         next();
-    // },
-    (req,res) => {
-    res.send("User's all personal information shown.")
-})
+// app.get("/user/getData", userAuth,
+//     // (req,res,next)=>{
+//     //     const token = "xyz"
+//     //     const isUserAuthorized = token === 'xyz'
+//     //     if (!isUserAuthorized)
+//     //         res.status(401).send("Unauthorized request.");
+//     //     else
+//     //         next();
+//     // },
+//     (req,res) => {
+//     res.send("User's all personal information shown.")
+// })
 
-app.get("/admin/getAllData", adminAuth,
-    // (req,res,next) => {
-    // const token = 'qwerty'
-    // const isAdminAuthorized = token === 'qwerty'
-    // if(!isAdminAuthorized)
-    //     res.status(401).send("Unauthorized request.")
-    // else
-    //     next()
-    // },
-    (req,res) => {
-        res.send("All users data fetched")
-    }
-)
+// app.get("/admin/getAllData", adminAuth,
+//     // (req,res,next) => {
+//     // const token = 'qwerty'
+//     // const isAdminAuthorized = token === 'qwerty'
+//     // if(!isAdminAuthorized)
+//     //     res.status(401).send("Unauthorized request.")
+//     // else
+//     //     next()
+//     // },
+//     (req,res) => {
+//         res.send("All users data fetched")
+//     }
+// )
 
-app.get("/admin/deleteUser", adminAuth,
-    // (req,res,next) => {
-    //     const token = 'qwerty'
-    //     const isAdminAuthorized = token === 'qwerty'
-    //     if(!isAdminAuthorized)
-    //         res.status(401).send("Unauthorized request.")
-    //     else
-    //         next()
-    // },
-    (req,res) => {
-        res.send("User data deleted.")
-    }
-)
+// app.get("/admin/deleteUser", adminAuth,
+//     // (req,res,next) => {
+//     //     const token = 'qwerty'
+//     //     const isAdminAuthorized = token === 'qwerty'
+//     //     if(!isAdminAuthorized)
+//     //         res.status(401).send("Unauthorized request.")
+//     //     else
+//     //         next()
+//     // },
+//     (req,res) => {
+//         res.send("User data deleted.")
+//     }
+// )
 
 
 // let rH1 = function (req,res,next) {
