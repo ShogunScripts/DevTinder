@@ -6,6 +6,7 @@ const app = express();
 
 app.use(express.json())   //when no route path give, it will run for every route
 
+// create user
 app.post("/signup", async (req,res) => {
     const user = new User(req.body)
 
@@ -23,10 +24,11 @@ app.post("/signup", async (req,res) => {
         await user.save()
         res.send("User created successfully.")
     } catch(err){
-        res.status(400).send("Error occurred : ",err.message)
+        res.status(400).send("Error occurred : ",err)
     }
 })
 
+// get user by _id & email
 app.get("/user", async (req,res) => {
     const userId = req.body._id
 
@@ -37,7 +39,37 @@ app.get("/user", async (req,res) => {
         else
             res.send(data);
     } catch (err) {
-        res.status(404).send("Something went wrong : ",err.message)
+        res.status(404).send("Something went wrong : ",err)
+    }
+})
+
+// get all users data
+
+
+// delete user
+app.delete("/user", async (req,res) => {
+    const userDelete = req.body._id
+
+    try {
+        await User.findByIdAndDelete({_id : userDelete})
+        res.send("User got deleted successfully.")
+    } catch (err) {
+        res.status(404).send("Error : ",err)
+    }
+})
+
+
+// update user data
+app.patch("/user", async (req,res) => {
+    const userId = req.body._id
+    const data = req.body
+
+    try {
+        const before = await User.findOneAndUpdate({_id : userId}, data, {returnDocument:'before'})
+        console.log(before)
+        res.send("User data updated successfully.")
+    } catch (err) {
+        res.send("Error",err)
     }
 })
 
