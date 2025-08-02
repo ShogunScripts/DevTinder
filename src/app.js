@@ -1,32 +1,24 @@
 const express = require("express");
 const {connectDB} = require("./config/database");
-const {userAuth, adminAuth} = require("./middlewares/auth")
 const {User} = require("./models/user")
+const cookieParser = require("cookie-parser")
+
+
+
 const app = express();
 
-app.use(express.json())   //when no route path give, it will run for every route
+app.use(express.json())   //when no route path given, it will run for every route
+app.use(cookieParser())
 
-// create user
-app.post("/signup", async (req,res) => {
-    const user = new User(req.body)
 
-    // creating a new instance of user model
-    // const user = new User({
-    //     firstName : "Virat",
-    //     lastName : "Kohli",
-    //     emailId : "virat@kohli.com",
-    //     password : "qwerty",
-    //     age : "36",
-    //     gender : "Male"
-    // })
+const authRouter = require("./routes/authRouter");
+const profileRouter = require("./routes/profileRouter");
+const requestsRouter = require("./routes/requestsRouter");
 
-    try {
-        await user.save()
-        res.send("User created successfully.")
-    } catch(err){
-        res.status(400).send("Error occurred : ",err)
-    }
-})
+
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestsRouter);
 
 // get user by _id & email
 app.get("/user", async (req,res) => {
@@ -44,7 +36,14 @@ app.get("/user", async (req,res) => {
 })
 
 // get all users data
-
+app.get("/feed", async(req,res) => {
+    try {
+        const users = await User.find({});
+        res.send(users)
+    } catch (err) {
+        res.status(400).send("Error: "+err)
+    }
+})
 
 // delete user
 app.delete("/user", async (req,res) => {
@@ -60,18 +59,37 @@ app.delete("/user", async (req,res) => {
 
 
 // update user data
-app.patch("/user", async (req,res) => {
-    const userId = req.body._id
+app.patch("/user/:userId", async (req,res) => {
+    const userId = req.params?.userId
     const data = req.body
 
     try {
-        const before = await User.findOneAndUpdate({_id : userId}, data, {returnDocument:'before'})
+        const ALLOWED_UPDATES = ["userId", "profileURL", "age", "gender", "skills", "about"]
+        const isUpdateAllowed = Object.keys(data).every((k) => 
+            ALLOWED_UPDATES.includes(k)
+        )
+        if(!isUpdateAllowed){
+            throw new Error("Update not allowed.")
+        }
+        if(Array.isArray(data.skills) && data?.skills.length > 10) {
+            throw new Error("Skills can't be more than 10")
+        }
+        const before = await User.findOneAndUpdate(
+            {_id : userId}, data, 
+            {
+                returnDocument:'before',
+                runValidators: true
+            }
+        )
         console.log(before)
         res.send("User data updated successfully.")
     } catch (err) {
-        res.send("Error",err)
+        res.status(404).send("Error: "+err.message)
     }
 })
+
+
+
 
 connectDB()
     .then(()=> {
