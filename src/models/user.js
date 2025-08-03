@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema({
     emailId : {
         type : String,
         required : true,
-        unique : true,
+        unique : true,      //index
         lowercase : true,
         trim : true,
         validate(value) {
@@ -45,11 +45,15 @@ const userSchema = mongoose.Schema({
     gender : {
         type : String,
         trim : true,
-        validate(value) {
-            if(!["Male", "Female", "Other"].includes(value)){
-                throw new Error("Invalid gender value.")
-            }
+        enum : {                            //Validator
+            values : ['Male','Female','Other'],
+            message : '{VALUE} is not supported.'
         }
+        // validate(value) {
+        //     if(!["Male", "Female", "Other"].includes(value)){
+        //         throw new Error("Invalid gender value.")
+        //     }
+        // }
     },
     profileURL : {
         type : String,
@@ -99,6 +103,6 @@ userSchema.methods.validatePassword = async function (passwordInputByUser) {
     return isValidPassword;
 }
 
-const User = mongoose.model("User",userSchema);
+const User = mongoose.model('User',userSchema);
 
 module.exports = {User}
