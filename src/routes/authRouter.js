@@ -55,9 +55,9 @@ authRouter.post("/login", async (req, res) => {
             // name of cookie          value of token           sets the expiration time    -  min   sec     ms
             // storing a JWT 
             // token under the name
-            res.send("Login Successful!")
+            res.send(user)
         } else 
-            throw new Error("Invalid Credentials2")
+            throw new Error("Invalid Credentials!!")
 
     } catch(err){
         res.status(400).send("Error : "+ err.message);

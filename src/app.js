@@ -2,10 +2,15 @@ const express = require("express");
 const {connectDB} = require("./config/database");
 const {User} = require("./models/user")
 const cookieParser = require("cookie-parser")
-
-
-
 const app = express();
+const cors = require("cors")
+
+app.use(
+    cors({
+        origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+        credentials: true
+    })
+)
 
 app.use(express.json())   //when no route path given, it will run for every route
 app.use(cookieParser())
@@ -33,7 +38,7 @@ app.get("/user", async (req,res) => {
         else
             res.send(data);
     } catch (err) {
-        res.status(404).send("Something went wrong : ",err)
+        res.status(404).send("Something went wrong : ",err.message)
     }
 })
 
@@ -66,7 +71,7 @@ app.patch("/user/:userId", async (req,res) => {
     const data = req.body
 
     try {
-        const ALLOWED_UPDATES = ["userId", "profileURL", "age", "gender", "skills", "about"]
+        const ALLOWED_UPDATES = ["profileURL", "age", "gender", "skills", "about"]
         const isUpdateAllowed = Object.keys(data).every((k) => 
             ALLOWED_UPDATES.includes(k)
         )
