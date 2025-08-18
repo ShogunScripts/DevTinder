@@ -96,12 +96,12 @@ app.patch("/user/:userId", async (req,res) => {
 })
 
 
-
+const PORT = process.env.PORT || 7777;
 
 connectDB()
     .then(()=> {
         console.log("Database Connection Established.");
-        app.listen(7777, ()=> {
+        app.listen(PORT, ()=> {
             console.log("Server is listening to the port 7777...")
         })
     })
