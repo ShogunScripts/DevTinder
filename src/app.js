@@ -27,6 +27,10 @@ app.use("/", profileRouter);
 app.use("/", requestsRouter);
 app.use("/", userRouter);
 
+app.get('/', (req, res) => {
+  res.send('Backend is running!');
+});
+
 // get user by _id & email
 app.get("/user", async (req,res) => {
     const userId = req.body._id
