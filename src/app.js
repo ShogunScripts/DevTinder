@@ -27,10 +27,6 @@ app.use("/", profileRouter);
 app.use("/", requestsRouter);
 app.use("/", userRouter);
 
-app.get('/', (req, res) => {
-  res.send('Backend is running!');
-});
-
 // get user by _id & email
 app.get("/user", async (req,res) => {
     const userId = req.body._id
@@ -100,12 +96,12 @@ app.patch("/user/:userId", async (req,res) => {
 })
 
 
-const PORT = process.env.PORT || 7777;
+
 
 connectDB()
     .then(()=> {
         console.log("Database Connection Established.");
-        app.listen(PORT, ()=> {
+        app.listen(7777, ()=> {
             console.log("Server is listening to the port 7777...")
         })
     })

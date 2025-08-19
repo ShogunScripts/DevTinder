@@ -25,8 +25,10 @@ authRouter.post("/signup", async (req,res) => {
             skills
         })
 
-        await user.save()
-        res.send("User created successfully!")
+        const savedUser = await user.save()
+        const token = await savedUser.getJWT()
+        res.cookie("token", token, { expires: new Date(Date.now() + 8 * 3600000)})
+        res.json({message : "User created successfully!", data: savedUser})
     } catch(err){
         res.status(400).send("Error : "+err.message)
     }
@@ -51,8 +53,8 @@ authRouter.post("/login", async (req, res) => {
 
         if(isPasswordValid){
             const token = await user.getJWT()
-            res.cookie("token",           token,              { expires: new Date(Date.now() + 15  * 60  *  1000)})
-            // name of cookie          value of token           sets the expiration time    -  min   sec     ms
+            res.cookie("token",           token,              { expires: new Date(Date.now() + 8 * 3600000)})
+            // name of cookie          value of token          
             // storing a JWT 
             // token under the name
             res.send(user)
